@@ -15,18 +15,7 @@ module.exports = {
         ]
     },
     entry: {
-        vendor: [
-            'domain-task',
-            'event-source-polyfill',
-            'react',
-            'react-dom',
-            'react-router',
-            'redux',
-            'redux-thunk',
-            'react-router-redux',
-            'redux-typed',
-            'style-loader'
-        ],
+        vendor: ['bootstrap', 'bootstrap/dist/css/bootstrap.css', 'domain-task', 'event-source-polyfill', 'react', 'react-dom', 'react-router', 'redux', 'redux-thunk', 'react-router-redux', 'redux-typed', 'style-loader', 'jquery'],
     },
     output: {
         path: path.join(__dirname, 'wwwroot', 'dist'),
@@ -35,6 +24,7 @@ module.exports = {
     },
     plugins: [
         extractCSS,
+        new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.DllPlugin({
             path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),

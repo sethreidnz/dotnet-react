@@ -27,7 +27,7 @@ var clientBundleConfig = merge(sharedConfig(), {
     entry: { 'main-client': './ClientApp/boot-client.tsx' },
     module: {
         loaders: [
-            { test: /\.scss$/, loader: ExtractTextPlugin.extract(['style', 'css', 'sass']) },
+            { test: /\.css$/, loader: ExtractTextPlugin.extract(['css']) },
             { test: /\.(png|jpg|jpeg|gif|svg)$/, loader: 'url', query: { limit: 25000 } }
         ]
     },
@@ -45,10 +45,10 @@ var clientBundleConfig = merge(sharedConfig(), {
             moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]') // Point sourcemap entries to the original file locations on disk
         })
     ] : [
-            // Plugins that apply in production builds only
-            new webpack.optimize.OccurenceOrderPlugin(),
-            new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
-        ])
+        // Plugins that apply in production builds only
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
+    ])
 });
 
 // Configuration for server-side (prerendering) bundle suitable for running in Node

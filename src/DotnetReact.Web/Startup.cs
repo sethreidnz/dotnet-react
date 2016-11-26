@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using DotnetreactWeb.Configuration;
 
 namespace DotnetreactWeb
 {
@@ -39,11 +40,17 @@ namespace DotnetreactWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Options Objects see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
+            services.Configure<AzureAdOptions>(options => Configuration.GetSection("AzureAd").Bind(options));
+
             // Add framework services.
             services.AddMvc();
 
-            // Add Authentication services.
-            services.AddAuthentication(sharedOptions => sharedOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+            if(getAzureAdOptions() != null)
+            {
+                // Add Authentication services.
+                services.AddAuthentication(sharedOptions => sharedOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,25 +74,8 @@ namespace DotnetreactWeb
 
             app.UseStaticFiles();
 
-            // // Configure the OWIN pipeline to use cookie auth.
-            app.UseCookieAuthentication(new CookieAuthenticationOptions());
-
-            // // Configure the OWIN pipeline to use OpenID Connect auth.
-            var aadInstance = !string.IsNullOrEmpty(Configuration["AzureAd:AadInstance"]) ?                
-                Configuration["AzureAd:AadInstance"] :  
-                $"https://login.microsoftonline.com/{Configuration["AzureAd:Tenant"]}";
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
-            {
-                ClientId = Configuration["AzureAD:ClientId"],
-                Authority = aadInstance,
-                ResponseType = OpenIdConnectResponseType.IdToken,
-                PostLogoutRedirectUri = Configuration["AzureAd:PostLogoutRedirectUri"],
-                Events = new OpenIdConnectEvents
-                {
-                    OnRemoteFailure = OnAuthenticationFailed,
-                }
-            });
-
+            ConfigureAuthentication(app);
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -96,6 +86,57 @@ namespace DotnetreactWeb
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+        }
+
+        private void ConfigureAuthentication(IApplicationBuilder app)
+        {
+            var azureAdOptions = getAzureAdOptions();
+            if (azureAdOptions != null)
+            {
+                Console.Write("Configuring Authentication");
+                // Configure the OWIN pipeline to use cookie auth.
+                app.UseCookieAuthentication(new CookieAuthenticationOptions());
+
+                // Configure the OWIN pipeline to use OpenID Connect auth.
+                var aadInstance = !string.IsNullOrEmpty(Configuration["AzureAd:AadInstance"]) ?
+                    Configuration["AzureAd:AadInstance"] :
+                    $"https://login.microsoftonline.com/{Configuration["AzureAd:Tenant"]}";
+
+                app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+                {
+                    ClientId = Configuration["AzureAD:ClientId"],
+                    Authority = aadInstance,
+                    ResponseType = OpenIdConnectResponseType.IdToken,
+                    PostLogoutRedirectUri = Configuration["AzureAd:PostLogoutRedirectUri"],
+                    Events = new OpenIdConnectEvents
+                    {
+                        OnRemoteFailure = OnAuthenticationFailed,
+                    }
+                });
+            }
+            else
+            {
+                Console.Write("Authentication appsettings not set. Skipping configuration.");
+            }
+        }
+
+        private AzureAdOptions getAzureAdOptions()
+        {
+            if (string.IsNullOrEmpty(Configuration["AzureAD:ClientId"]) ||
+                string.IsNullOrEmpty(Configuration["AzureAD:AadInstance"]) ||
+                string.IsNullOrEmpty(Configuration["AzureAD:Tenant"]) ||
+                string.IsNullOrEmpty(Configuration["AzureAd:PostLogoutRedirectUri"])
+                )
+            {
+                return null;
+            }
+            return new AzureAdOptions()
+            {
+                ClientId = Configuration["AzureAD:ClientId"],
+                AadInstance = Configuration["AzureAD:AadInstance"],
+                Tenant = Configuration["AzureAD:Tenant"],
+                PostLogoutRedirectUri = Configuration["AzureAD:PostLogoutRedirectUri"],
+            };
         }
 
         // Handle sign-in errors differently than generic errors.
