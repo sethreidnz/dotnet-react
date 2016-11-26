@@ -27,7 +27,7 @@ var clientBundleConfig = merge(sharedConfig(), {
     entry: { 'main-client': './ClientApp/boot-client.tsx' },
     module: {
         loaders: [
-            { test: /\.css$/, loader: ExtractTextPlugin.extract(['css']) },
+            { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.(png|jpg|jpeg|gif|svg)$/, loader: 'url', query: { limit: 25000 } }
         ]
     },

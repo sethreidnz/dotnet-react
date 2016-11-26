@@ -16,6 +16,7 @@ module.exports = {
     },
     entry: {
         vendor: [
+            'bootstrap',
             'domain-task',
             'event-source-polyfill',
             'react',
