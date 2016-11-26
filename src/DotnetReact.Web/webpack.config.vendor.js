@@ -15,7 +15,19 @@ module.exports = {
         ]
     },
     entry: {
-        vendor: ['bootstrap', 'bootstrap/dist/css/bootstrap.css', 'domain-task', 'event-source-polyfill', 'react', 'react-dom', 'react-router', 'redux', 'redux-thunk', 'react-router-redux', 'redux-typed', 'style-loader', 'jquery'],
+        vendor: [
+            'domain-task',
+            'event-source-polyfill',
+            'react',
+            'react-dom',
+            'react-router',
+            'redux',
+            'redux-thunk',
+            'react-router-redux',
+            'redux-typed',
+            'style-loader',
+            'jquery'
+        ],
     },
     output: {
         path: path.join(__dirname, 'wwwroot', 'dist'),
