@@ -4,9 +4,10 @@ This project was created using the [ASPET JavaScript Services](https://github.co
 
 This starter kit includes includes:
 
- * [.NET Core MVC]() for serving the client app and creating API end points.
- * [React](https://facebook.github.io/react/)
- * [Redux](http://redux.js.org/) for handling client side application state
+ * [**.NET Core MVC**]() for serving the client app and creating API end points.
+ * [**React**](https://facebook.github.io/react/)
+ * [**Redux**](http://redux.js.org/) for handling client side application state
+ * [**Bootstrap 4**](https://v4-alpha.getbootstrap.com/) as a css framework
  * [**Server-side prerendering**](#server-side-prerendering) for *universal* (a.k.a. *isomorphic*) applications, where your Angular 2 / React / etc. components are first rendered on the server, and then transferred to the client where execution continues
  * [**Webpack middleware**](#webpack-dev-middleware) so that, during development, any webpack-built resources will be generated on demand, without you having to run webpack manually or compile files to disk
  * [**Hot module replacement**](#webpack-hot-module-replacement) so that, during development, your code and markup changes will be pushed to your browser and updated in the running application automatically, without even needing to reload the page
