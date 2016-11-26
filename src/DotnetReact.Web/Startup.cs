@@ -98,16 +98,12 @@ namespace DotnetreactWeb
                 app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
                 // Configure the OWIN pipeline to use OpenID Connect auth.
-                var aadInstance = !string.IsNullOrEmpty(Configuration["AzureAd:AadInstance"]) ?
-                    Configuration["AzureAd:AadInstance"] :
-                    $"https://login.microsoftonline.com/{Configuration["AzureAd:Tenant"]}";
-
                 app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
                 {
-                    ClientId = Configuration["AzureAD:ClientId"],
-                    Authority = aadInstance,
+                    ClientId = azureAdOptions.ClientId,
+                    Authority = string.Format(azureAdOptions.AadInstance, azureAdOptions.Tenant),
                     ResponseType = OpenIdConnectResponseType.IdToken,
-                    PostLogoutRedirectUri = Configuration["AzureAd:PostLogoutRedirectUri"],
+                    PostLogoutRedirectUri = azureAdOptions.PostLogoutRedirectUri,
                     Events = new OpenIdConnectEvents
                     {
                         OnRemoteFailure = OnAuthenticationFailed,
