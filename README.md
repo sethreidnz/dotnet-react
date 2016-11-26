@@ -47,6 +47,7 @@ dotnet restore
 Run the application with hot module reloading and automatic re-compiling of .NET code:
 
 ```bash
+cd src/DotnetReact.Web
 dotnet watch run
 ```
 
@@ -55,5 +56,9 @@ dotnet watch run
 TBC
 
 ## Setting up Azure AD Integration
+
+TBC
+
+## Using and IDE
 
 TBC
