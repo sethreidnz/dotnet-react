@@ -18,6 +18,9 @@ var sharedConfig = () => ({
             { test: /\.tsx?$/, include: /ClientApp/, loader: 'babel-loader' },
             { test: /\.tsx?$/, include: /ClientApp/, loader: 'ts', query: { silent: true } }
         ]
+    },
+    sassLoader: {
+        includePaths: [path.resolve(__dirname, "./node_modules/bootstrap/scss")]
     }
 });
 
