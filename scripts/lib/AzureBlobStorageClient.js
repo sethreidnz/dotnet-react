@@ -5,10 +5,10 @@ module.exports = class AzureBlobStorageClient {
     if (!storageAccountName) throw new Error('You must supply a "storageAccountName"');
     if (!storageAccountKey) throw new Error('You must supply a "storageAccountKey"');
     this.azureStorage = azureStorage;
-    process.env.AZURE_STORAGE_ACCOUNT = storageAccountName;
-    process.env.AZURE_STORAGE_ACCESS_KEY = storageAccountKey;
-    const azureBlobService = this.getBlobService(storageAccountName, storageAccountKey);
-    this.azureBlobService = azureBlobService;
+    // process.env.AZURE_STORAGE_ACCOUNT = storageAccountName;
+    // // process.env.AZURE_STORAGE_ACCESS_KEY = storageAccountKey;
+    // const azureBlobService = this.getBlobService(storageAccountName, storageAccountKey);
+    this.azureBlobService = this.azureStorage.createBlobService(storageAccountName, storageAccountName);;
   }
 
   createContainerIfNotExists(containerName) {
@@ -43,8 +43,8 @@ module.exports = class AzureBlobStorageClient {
     });
   }
   getBlobService(storageAccountName, storageAccountKey) {
-    process.env.AZURE_STORAGE_ACCOUNT = storageAccountName;
-    process.env.AZURE_STORAGE_ACCESS_KEY = storageAccountKey;
-    return this.azureStorage.createBlobService();
+    // process.env.AZURE_STORAGE_ACCOUNT = storageAccountName;
+    // process.env.AZURE_STORAGE_ACCESS_KEY = storageAccountKey;
+    return this.azureStorage.createBlobService(storageAccountName, storageAccountName);
   }
 };
