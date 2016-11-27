@@ -7,6 +7,7 @@ import { ActionCreator } from './';
 
 export interface UserDetailsState {
     isLoading: boolean;
+    hasLoaded: boolean;
     user: UserModel;
 }
 
@@ -39,6 +40,8 @@ class RecieveUserDetails extends Action {
 
 export const actionCreators = {
     requestUserDetails: (): ActionCreator => (dispatch, getState) => {
+        const state = getState();
+        if(state.userDetails.isLoading || state.userDetails.hasLoaded) return;
         let fetchTask = fetch('/api/User')
             .then(response => response.json())
             .then((user: UserModel) => {
@@ -54,19 +57,22 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 const initialState: UserDetailsState = {
     user: null,
-    isLoading: false
+    isLoading: false,
+    hasLoaded: false
 };
 export const reducer: Reducer<UserDetailsState> = (state, action) => {
     if (isActionType(action, RequestUserDetails)) {
-        return {
+        return Object.assign({}, state, {
+            hasLoaded: false,
             isLoading: true,
             user: null
-        };
+        });
     } else if (isActionType(action, RecieveUserDetails)) {
-        return {
+        return Object.assign({}, state, {
+            hasLoaded: true,
             isLoading: false,
             user: action.user
-        }
+        });
     }
 
     // For unrecognized actions (or in cases where actions have no effect), must return the existing state

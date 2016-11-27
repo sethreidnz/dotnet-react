@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 import { provide } from 'redux-typed';
-import { ApplicationState }  from '../store';
-import * as WeatherForecastsState from '../store/WeatherForecasts';
+import { ApplicationState }  from '../../store';
+import * as WeatherForecastsState from '../../store/WeatherForecasts';
 
 interface RouteParams {
     startDateIndex: string;

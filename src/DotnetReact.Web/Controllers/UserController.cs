@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetreactWeb.Controllers
@@ -11,7 +12,7 @@ namespace DotnetreactWeb.Controllers
         {           
             if(User == null) return  null;
                 return new UserModel(){
-                    FirstName = "Seth"
+                    FirstName = "John"
             };
         }
 
