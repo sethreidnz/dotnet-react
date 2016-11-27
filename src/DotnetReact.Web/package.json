@@ -1,5 +1,5 @@
 {
-  "name": "dotnet-react",
+  "name": "dotnet-react-web",
   "version": "0.0.0",
   "dependencies": {
     "@types/react": "^0.14.29",
@@ -46,5 +46,8 @@
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.14.1",
     "webpack-node-externals": "^1.4.3"
+  },
+  "devDependencies": {
+    "resolve-url": "^0.2.1"
   }
 }

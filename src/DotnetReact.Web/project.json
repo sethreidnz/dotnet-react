@@ -47,7 +47,8 @@
       "exclude": [
         "node_modules"
       ]
-    }
+    },
+    "debugType": "portable"
   },
   "runtimeOptions": {
     "configProperties": {
