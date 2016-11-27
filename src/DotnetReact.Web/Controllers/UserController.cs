@@ -9,10 +9,10 @@ namespace DotnetreactWeb.Controllers
 
         [HttpGet]
         public UserModel Get()
-        {           
-            if(User == null) return  null;
-                return new UserModel(){
-                    FirstName = "John"
+        {
+            return new UserModel()
+            {
+                FirstName = "John"
             };
         }
 
