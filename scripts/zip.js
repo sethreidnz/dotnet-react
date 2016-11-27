@@ -4,7 +4,7 @@ const program = require('commander');
 const chalk = require('chalk');
 
 // local dependencies
-const validateParameters = require('./lib/validateParameters');
+const { validateParameters } = require('./lib/utility');
 
 program
 .option('-d, --directory <directory>', 'The directory to zip')

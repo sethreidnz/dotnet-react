@@ -6,7 +6,7 @@
   "scripts": {
     "zip": "node ./scripts/zip.js --directory ./Release --output ./Release/release.zip",
     "publish": "dotnet publish src/DotnetReact.Web -c Release -o ./Release",
-    "deploy": "node ./scripts/deploy.js"
+    "deploy": "node ./scripts/deploy.js --packagePath ./Release/release.zip"
   },
   "repository": {
     "type": "git",

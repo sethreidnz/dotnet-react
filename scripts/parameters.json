@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "deploymentStorageAccountName": {
-            "value":""
-        },
-        "deploymentStorageAccountKey": {
-            "value":""
+            "value":"persistant-storage"
         },
         "deploymentStorageAccountContainer": {
-            "value":""
+            "value":"persistantstorage"
+        },
+         "deploymentStorageAccountKey": {
+            "value":"Y6xHW0ShSsHpV4KTWgpoyE1K0CSlYOKBPM4Rp43xOyLs8b84Ht3uirgZLWN7Yj9q2mkA0IonTL8lNg9HwVEcCA=="
         }
    }
 }

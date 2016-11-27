@@ -27,16 +27,18 @@ module.exports = class AzureBlobStorageClient {
   }
   createBlockBlobFromFile(filePath, containerName, blobName, options = {}) {
     const self = this;
-    return new Promise((resolve, reject) => {
+    console.log(`${filePath} ${containerName} ${blobName}`)
+    return new Promise((resolve, reject) => {    
       self.azureBlobService.createBlockBlobFromLocalFile(containerName, blobName, filePath, options,
-      (error, result, response) => {
-        if (error) {
-          reject(error);
-        } else if (!response.isSuccessful) {
-          reject(response);
-        } else {
-          resolve(`${self.azureBlobService.host.primaryHost}${containerName}/${blobName}`);
-        }
+        (error, result, response) => { 
+          console.log(`${error} ${result} ${response}`)       
+          if (error) {
+            reject(error);
+          } else if (!response.isSuccessful) {
+            reject(response);
+          } else {
+            resolve(`${self.azureBlobService.host.primaryHost}${containerName}/${blobName}`);
+          }
       });
     });
   }
