@@ -8,7 +8,7 @@
     "tasks": [
         {
             "taskName": "build",
-            "args": ["${workspaceRoot}/src/DotnetReact.Web"],
+            "args": ["${workspaceRoot}/project.json"],
             "isBuildCommand": true,
             "showOutput": "silent",
             "problemMatcher": "$msCompile"
