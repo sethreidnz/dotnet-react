@@ -1,18 +1,26 @@
+using System.Collections.Generic;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetreactWeb.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class UserController : Controller
     {
 
         [HttpGet]
         public UserModel Get()
-        {           
-            if(User == null) return  null;
-                return new UserModel(){
-                    FirstName = "John"
+        {
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            var email = identity.FindFirst((Claim claim) => {
+                return claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+            })?.Value;
+            return new UserModel()
+            {
+                FirstName = email
             };
         }
 
