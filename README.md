@@ -17,13 +17,13 @@ This starter kit includes includes:
  
 ## Table Of Contents
 1. [Prerequisites](#Prerequisites)
-1. [Prerequisites](#Quick-Start)
-1. [Prerequisites](#Quick-Start)
+1. [Quick Start](#Quick-Start)
+1. [Project Structure](#Project-Structure)
 
 ## Quick Start
 
 * **Node 4+** I recommend [NVM](https://github.com/creationix/nvm) or [NVM for Windows]()
-* [**.NET Core CLI preview 2**](https://docs.microsoft.com/en-us/dotnet/articles/core/tools/)
+* [**.NET Core 1.0.1 SDK**](https://www.microsoft.com/net/download/core)
 
 There are two primary ways to work with this project:
 
