@@ -98,9 +98,9 @@ namespace DotnetreactWeb
                 app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
                 {
                     ClientId = azureAdOptions.ClientId,
-                    Authority = string.Format(azureAdOptions.AadInstance, azureAdOptions.Tenant),
+                    Authority = $"{azureAdOptions.AadInstance}/{azureAdOptions.Tenant}",
                     ResponseType = OpenIdConnectResponseType.IdToken,
-                    PostLogoutRedirectUri = azureAdOptions.PostLogoutRedirectUri,
+                    PostLogoutRedirectUri = azureAdOptions.PostLogoutRedirectUri.ToString(),
                     Events = new OpenIdConnectEvents
                     {
                         OnRemoteFailure = OnAuthenticationFailed,
@@ -128,7 +128,7 @@ namespace DotnetreactWeb
                 ClientId = Configuration["AzureAD:ClientId"],
                 AadInstance = Configuration["AzureAD:AadInstance"],
                 Tenant = Configuration["AzureAD:Tenant"],
-                PostLogoutRedirectUri = Configuration["AzureAD:PostLogoutRedirectUri"],
+                PostLogoutRedirectUri = Configuration["AzureAD:PostLogoutRedirectUri"]
             };
         }
 
