@@ -56,6 +56,9 @@ namespace DotnetreactWeb
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             
+            app.UseStaticFiles();
+            ConfigureAuthentication(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -68,10 +71,6 @@ namespace DotnetreactWeb
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseStaticFiles();
-
-            ConfigureAuthentication(app);
             
             app.UseMvc(routes =>
             {
@@ -98,9 +97,9 @@ namespace DotnetreactWeb
                 app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
                 {
                     ClientId = azureAdOptions.ClientId,
-                    Authority = $"{azureAdOptions.AadInstance}/{azureAdOptions.Tenant}",
+                    Authority = azureAdOptions.Authority,
                     ResponseType = OpenIdConnectResponseType.IdToken,
-                    PostLogoutRedirectUri = azureAdOptions.PostLogoutRedirectUri.ToString(),
+                    PostLogoutRedirectUri = azureAdOptions.PostLogoutRedirectUri,
                     Events = new OpenIdConnectEvents
                     {
                         OnRemoteFailure = OnAuthenticationFailed,
@@ -117,9 +116,7 @@ namespace DotnetreactWeb
         {
             if (string.IsNullOrEmpty(Configuration["AzureAD:ClientId"]) ||
                 string.IsNullOrEmpty(Configuration["AzureAD:AadInstance"]) ||
-                string.IsNullOrEmpty(Configuration["AzureAD:Tenant"]) ||
-                string.IsNullOrEmpty(Configuration["AzureAd:PostLogoutRedirectUri"])
-                )
+                string.IsNullOrEmpty(Configuration["AzureAD:Tenant"]))
             {
                 return null;
             }
@@ -127,6 +124,7 @@ namespace DotnetreactWeb
             {
                 ClientId = Configuration["AzureAD:ClientId"],
                 AadInstance = Configuration["AzureAD:AadInstance"],
+                Authority = $"{Configuration["AzureAD:AadInstance"]}/{Configuration["AzureAD:Tenant"]}",
                 Tenant = Configuration["AzureAD:Tenant"],
                 PostLogoutRedirectUri = Configuration["AzureAD:PostLogoutRedirectUri"]
             };

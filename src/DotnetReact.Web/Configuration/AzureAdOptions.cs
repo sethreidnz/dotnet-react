@@ -10,6 +10,7 @@ namespace DotnetreactWeb.Configuration
         public string ClientId { get; set; }
         public string AadInstance { get; set; }
         public string Tenant { get; set; }
+        public string Authority { get; set; }
         public string PostLogoutRedirectUri { get; set; }
     }
 }
