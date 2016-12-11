@@ -78,27 +78,7 @@
                         "ipBasedSslState": 0
                     }
                 ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServiceName'))]",
-                "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "AzureAd:Tenant",
-                            "value": "[parameters('azureAdTenant')]"
-                        },
-                        {
-                            "name": "AzureAd:ClientId",
-                            "value": "[parameters('azureAdClientId')]"
-                        },
-                        {
-                            "name": "AzureAd:AadInstance",
-                            "value": "[parameters('azureAdAadInstance')]"
-                        },
-                        {
-                            "name": "AzureAd:PostLogoutRedirectUri",
-                            "value": "[parameters('azureAdPostLogoutRedirectUri')]"
-                        }
-                    ]
-                }
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServiceName'))]"
             },
             "resources": [
                 {
@@ -118,6 +98,23 @@
                         "connectionString": "",
                         "setParameters": {}
                     }
+                },
+                {
+                    "name": "appsettings",
+                    "type": "config",
+                    "apiVersion": "2015-08-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Web/sites/', variables('webAppName'))]", "[concat('Microsoft.Web/sites/', variables('webAppName'), '/extensions/MSDeploy')]"
+                    ],
+                    "tags": {
+                        "displayName": "WebAppSettings"
+                    },
+                    "properties": {
+                        "AzureAd:Tenant": "[parameters('azureAdTenant')]",
+                        "AzureAd:ClientId": "[parameters('azureAdClientId')]",
+                        "AzureAd:AadInstance": "[parameters('azureAdAadInstance')]",
+                        "AzureAd:PostLogoutRedirectUri": "[parameters('azureAdPostLogoutRedirectUri')]"
+                    }
                 }
             ],
             "dependsOn": [
@@ -126,7 +123,7 @@
         }
     ],
     "outputs": {
-        "webAppUrl":{
+        "webAppUrl": {
             "type": "string",
             "value": "[variables('webAppUrl')]"
         }
