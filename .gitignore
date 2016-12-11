@@ -1,4 +1,7 @@
 ## Project specific ignores
+release
+deploy
+scripts/configuration/storage.config.json
 
 scripts/parameters.jsons
 

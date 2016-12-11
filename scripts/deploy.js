@@ -1,72 +1,38 @@
-// nodeX_modules
-const program = require('commander');
-const chalk = require('chalk');
-const path = require('path');
+const chalk = require('chalk')
+const program = require('commander')
 
-// local dependencies
-const { 
-  validateParameters, 
-  parseJsonFile, 
-  fileExists,
-  getArmTemplateParamters,
-  getGitCommitHash
-} = require('./lib/utility');
-const AzureBlobStorageClient = require('./lib/AzureBlobStorageClient');
+const {
+  azureUtilities: {
+    runArmDeployment
+  }
+} = require('./lib')
 
 program
-.option('-c, --packagePath <storageContainerName>', 'The storage container name')
-.parse(process.argv);
+  .option('-a, --resourceGroupName <resourceGroupName>', 'The resource group to deploy to')
+  .option('-a, --armTemplateFilePath <armTemplateFilePath>', 'Defaults to "./deploy/template.json"')
+  .option('-a, --armParametersFilePath <armParametersFilePath>', 'Defaults to "./deploy/template-parameters.json"')
+  .parse(process.argv)
 
-validateParameters(program, [
-  'packagePath'
-]);
-
-var armTemplateParametersFilePath = path.join(__dirname, '/parameters.json');
-if(!fileExists(armTemplateParametersFilePath)) {
-  console.log(chalk.red(`You must rename the file './scripts/paramters-example.js' and fill in the values.`));
+let resourceGroupName = program.resourceGroupName
+if (!resourceGroupName) {
+  console.log(chalk.red('You must supply the parameter --resourceGroupName'))
+  process.exit()
 }
+let deploymentName = null
+let armTemplateFilePath = program.armTemplateFilePath || './deploy/template.json'
+let armParametersFilePath = program.armParametersFilePath || './deploy/template-parameters.json'
 
-validateStorageAccountParameters = (storageAccountName, storageAccountKey, containerName) => {
-  if(!storageAccountName, storageAccountKey, containerName){
-    console.log(chalk.red(`You need to provide all the parameters in your parameters.json file`));
-    process.exit();
-  }
-}
-
-deployPackageToAzureStorage = (armParameters) => {
-  const packagePath = program.packagePath;
-  const storageAccountName = armParameters.deploymentStorageAccountName.value;
-  const storageAccountKey = armParameters.deploymentStorageAccountKey.value;
-  const storageContainerName = armParameters.deploymentStorageAccountContainer.value;
-  const azureBlobStorageClient = new AzureBlobStorageClient(storageAccountName, storageAccountKey);
-  return azureBlobStorageClient.createBlockBlobFromFile(packagePath, storageContainerName, 'release.zip')
-}
-
-getArmTemplateParamters(path.join(__dirname, '/parameters.json'))
-.then((armParameters) => {
-  return deployPackageToAzureStorage(armParameters);
-})
-.then(() => {
-  console.log(chalk.green(`Succsessfully deployed package "${packagePath}"`));
-})
-.catch((error) => {
-  console.log(chalk.red(`Failed to zip folder "${packagePath}": /n/n ${error}`));
-});
-
-
-
-
-// console.log(`storageAccountName: ${storageAccountName}`);
-// console.log(`storageAccountKey: ${storageAccountKey.replace(/./g, '*')}`);
-// console.log(`storageContainerName: ${containerName}`);
-// console.log(`packagePath: ${packagePath}`);
-
-// const azureBlobStorageClient = new AzureBlobStorageClient(storageAccountName, storageAccountKey);
-
-// zipDirectory(directory, output)
-// .then(() => {
-//   console.log(chalk.green(`Succsessfully deployed package "${packagePath}"`));
-// })
-// .catch((error) => {
-//   console.log(chalk.red(`Failed to zip folder "${packagePath}": /n/n ${error}`));
-// });
+console.log(chalk.blue('Beginning arm deployment: \n'))
+console.log(chalk.blue(`resourceGroupName: ${resourceGroupName}`))
+console.log(chalk.blue(`armTemplateFilePath: ${armTemplateFilePath}`))
+console.log(chalk.blue(`armParametersFilePath: ${armParametersFilePath}`))
+runArmDeployment(resourceGroupName, deploymentName, armTemplateFilePath, armParametersFilePath)
+  .then((armResponse) => {
+    console.log(chalk.green(`Finished arm deployment: \n`))
+    console.log(chalk.grey(JSON.stringify(armResponse, null, 2)))
+    process.exit()
+  })
+  .catch((error) => {
+    console.log(chalk.red('Error while deploying to Azure:'))
+    console.log(chalk.red(`${error}`))
+  })
