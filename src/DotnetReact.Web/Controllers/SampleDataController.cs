@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetreactWeb.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {

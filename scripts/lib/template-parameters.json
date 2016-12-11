@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "packageUri": {
+      "value": "https://persistantstorage.blob.core.windows.net:443/web-packages/package-a36e4e4997c0f271fbc3d3ab3aee0da29b9a08c1.zip"
+    }
+  }
+}

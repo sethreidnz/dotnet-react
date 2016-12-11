@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -12,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using DotnetreactWeb.Configuration;
 
 namespace DotnetreactWeb
@@ -53,12 +50,15 @@ namespace DotnetreactWeb
             }
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             
+            app.UseStaticFiles();
+            ConfigureAuthentication(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,10 +71,6 @@ namespace DotnetreactWeb
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseStaticFiles();
-
-            ConfigureAuthentication(app);
             
             app.UseMvc(routes =>
             {
@@ -101,7 +97,7 @@ namespace DotnetreactWeb
                 app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
                 {
                     ClientId = azureAdOptions.ClientId,
-                    Authority = string.Format(azureAdOptions.AadInstance, azureAdOptions.Tenant),
+                    Authority = azureAdOptions.Authority,
                     ResponseType = OpenIdConnectResponseType.IdToken,
                     PostLogoutRedirectUri = azureAdOptions.PostLogoutRedirectUri,
                     Events = new OpenIdConnectEvents
@@ -120,9 +116,7 @@ namespace DotnetreactWeb
         {
             if (string.IsNullOrEmpty(Configuration["AzureAD:ClientId"]) ||
                 string.IsNullOrEmpty(Configuration["AzureAD:AadInstance"]) ||
-                string.IsNullOrEmpty(Configuration["AzureAD:Tenant"]) ||
-                string.IsNullOrEmpty(Configuration["AzureAd:PostLogoutRedirectUri"])
-                )
+                string.IsNullOrEmpty(Configuration["AzureAD:Tenant"]))
             {
                 return null;
             }
@@ -130,8 +124,9 @@ namespace DotnetreactWeb
             {
                 ClientId = Configuration["AzureAD:ClientId"],
                 AadInstance = Configuration["AzureAD:AadInstance"],
+                Authority = $"{Configuration["AzureAD:AadInstance"]}/{Configuration["AzureAD:Tenant"]}",
                 Tenant = Configuration["AzureAD:Tenant"],
-                PostLogoutRedirectUri = Configuration["AzureAD:PostLogoutRedirectUri"],
+                PostLogoutRedirectUri = Configuration["AzureAD:PostLogoutRedirectUri"]
             };
         }
 

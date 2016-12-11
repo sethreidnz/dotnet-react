@@ -1,0 +1,102 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "packageUri": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "appServiceName": "[concat(resourceGroup().name, '-web')]",
+        "webAppName": "[variables('appServiceName')]",
+        "webAppHostName": "[concat(variables('webAppName'), '.azurewebsites.net')]",
+        "webAppScmHostName": "[concat(variables('webAppName'), '.scm.azurewebsites.net')]",
+        "webAppUrl": "[concat('http://', variables('webAppHostName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "sku": {
+                "name": "F1",
+                "tier": "Free",
+                "size": "F1",
+                "family": "F",
+                "capacity": 0
+            },
+            "kind": "app",
+            "name": "[variables('appServiceName')]",
+            "apiVersion": "2015-08-01",
+            "location": "South Central US",
+            "properties": {
+                "name": "[variables('appServiceName')]",
+                "numberOfWorkers": 0
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "kind": "app",
+            "name": "[variables('webAppName')]",
+            "apiVersion": "2015-08-01",
+            "location": "South Central US",
+            "tags": {
+                "hidden-related:/subscriptions/0ed12513-bf85-459c-a4fb-e55f8b8a81fb/resourcegroups/sethreid-html-1/providers/Microsoft.Web/serverfarms/sethreid-html-1": "empty"
+            },
+            "properties": {
+                "name": "[variables('webAppName')]",
+                "hostNames": [
+                    "[variables('webAppHostName')]"
+                ],
+                "enabledHostNames": [
+                    "[variables('webAppHostName')]",
+                    "[variables('webAppScmHostName')]"
+                ],
+                "hostNameSslStates": [
+                    {
+                        "name": "[variables('webAppHostName')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    },
+                    {
+                        "name": "[variables('webAppScmHostName')]",
+                        "sslState": 0,
+                        "thumbprint": null,
+                        "ipBasedSslState": 0
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServiceName'))]"
+            },
+            "resources": [
+                {
+                    "name": "MSDeploy",
+                    "type": "extensions",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2015-08-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Web/sites/', variables('webAppName'))]"
+                    ],
+                    "tags": {
+                        "displayName": "webDeploy"
+                    },
+                    "properties": {
+                        "packageUri": "[parameters('packageUri')]",
+                        "dbType": "None",
+                        "connectionString": "",
+                        "setParameters": {}
+                    }
+                }
+            ],
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServiceName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "webAppUrl":{
+            "type": "string",
+            "value": "[variables('webAppUrl')]"
+        }
+    }
+}

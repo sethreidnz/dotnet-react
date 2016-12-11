@@ -42,7 +42,10 @@ export const actionCreators = {
     requestUserDetails: (): ActionCreator => (dispatch, getState) => {
         const state = getState();
         if(state.userDetails.isLoading || state.userDetails.hasLoaded) return;
-        let fetchTask = fetch('/api/User')
+        let fetchTask = fetch('/api/User', {
+                credentials: 'include',
+                 mode: 'no-cors'
+            })
             .then(response => response.json())
             .then((user: UserModel) => {
                 dispatch(new RecieveUserDetails(user));

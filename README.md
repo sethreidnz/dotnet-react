@@ -58,7 +58,47 @@ TBC
 
 ## Setting up Azure AD Integration
 
-TBC
+> NOTE: For more detail on how the Azure AD integration done see [here](https://azure.microsoft.com/en-us/resources/samples/active-directory-dotnet-webapp-openidconnect-aspnetcore/)
+
+To set up Azure AD you need to first create and application in Azure AD and then set the configuration values for:
+
+- ClientId - The Application ID in the Azure Portal
+- Tenant - The name of your Azure AD Instance
+- AadInstance - The public instance of Azure AD (if using default Azure AD then it will be https://login.microsoftonline.com)
+- PostLogoutRedirectUri - **Optional:** The URL to redirect to after logout
+
+You can update the configuration for your local environment in two ways:
+
+**User Secrets (*Recommened*)**
+
+> Note: For more information on user secrets in Aspnet Core see [here](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets)
+
+To update your user secrets just run the following commands replacing with your Azure AD Application details:
+
+```bash
+cd src/DotnetReact.Web
+dotnet user-secrets list
+# info: No secrets configured for this application.
+dotnet user-secrets set AzureAd:ClientId {Your Azure ClientId} # Required
+dotnet user-secrets set AzureAd:Tenant {Your Tenant} # Required
+dotnet user-secrets set AzureAd:AadInstance {Your AadInstance} # Required
+dotnet user-secrets set AzureAd:PostLogoutRedirectUri {Your PostLogoutRedirectUri} # Optional
+```
+
+**appsettings.json**
+
+> NOTE: If you use this method then the settings will be checked into source control
+
+Update the values in the appsettings.json:
+
+```json
+"AzureAd": {
+    "ClientId": "", // Required
+    "Tenant": "", // Required
+    "AadInstance": "", // Required
+    "PostLogoutRedirectUri": "" // Optional
+}
+```
 
 ## Using and IDE
 
