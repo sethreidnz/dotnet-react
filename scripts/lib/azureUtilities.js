@@ -82,14 +82,28 @@ const runArmDeployment = (
     })
 }
 
-const getMissingConfigValues = (azureConfig) => {
+const getMissingAzureStorageConfigValues = (azureConfig) => {
   const requiredParameters = [
     'storageAccountName',
     'storageAccountKey',
     'storageContainerName'
   ]
+  return getMissingConfigValues(azureConfig, requiredParameters)
+}
+
+const getMissingAzureAdConfigValues = (azureConfig) => {
+  const requiredParameters = [
+    'azureAdTenant',
+    'azureAdClientId',
+    'azureAdAadInstance',
+    'azureAdPostLogoutRedirectUri'
+  ]
+  return getMissingConfigValues(azureConfig, requiredParameters)
+}
+
+const getMissingConfigValues = (config, requiredParameters) => {
   const missingParameters = requiredParameters.filter((parameter) => {
-    return azureConfig && !azureConfig[parameter]
+    return config && !config[parameter]
   })
   return missingParameters.length ? missingParameters : false
 }
@@ -99,14 +113,14 @@ const parseAzureStorageCredentials = (commandLineConfig = null, azureConfigPath 
     if (azureConfigPath) {
       readJsonFile(azureConfigPath).then((configJson) => {
         const config = JSON.parse(configJson)
-        const missingConfigValues = getMissingConfigValues(config)
+        const missingConfigValues = getMissingAzureStorageConfigValues(config)
         if (missingConfigValues) {
           reject(`You have missing config file values: \n${JSON.stringify(missingConfigValues.join(','))}`)
         }
         resolve(config)
       })
     } else if (commandLineConfig) {
-      let missingConfigValues = getMissingConfigValues(commandLineConfig)
+      let missingConfigValues = getMissingAzureStorageConfigValues(commandLineConfig)
       if (missingConfigValues) {
         missingConfigValues = missingConfigValues.map((configValue) => {
           return `--${configValue}`
@@ -115,7 +129,7 @@ const parseAzureStorageCredentials = (commandLineConfig = null, azureConfigPath 
       }
       resolve(commandLineConfig)
     } else {
-      const missingConfigValues = getMissingConfigValues(commandLineConfig).map((configValue) => {
+      const missingConfigValues = getMissingAzureStorageConfigValues(commandLineConfig).map((configValue) => {
         return `--${configValue}`
       })
       reject(`
@@ -132,5 +146,7 @@ module.exports = {
   runArmDeployment,
   changeToArmMode,
   parseAzureStorageCredentials,
-  getMissingConfigValues
+  getMissingConfigValues,
+  getMissingAzureStorageConfigValues,
+  getMissingAzureAdConfigValues
 }

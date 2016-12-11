@@ -66,6 +66,7 @@ const packageDirectory = program.packageDirectory === undefined
   ? path.join(sourceDirectoryPath, '/release')
   : program.packageDirectory
 
+let azureConfig = null
 const armTemplateFilePath = path.join(sourceDirectoryPath, 'scripts/configuration/template.json')
 const armParametersFilePath = path.join(sourceDirectoryPath, 'scripts/configuration/template-parameters.json')
 let packageUri = null
@@ -78,12 +79,13 @@ console.log(chalk.blue(`Parsing Azure config input`))
 parseAzureStorageCredentials(azureConfigCommandLineArgs, azureConfigPath).then((config) => {
   console.log(chalk.green(`Azure config input validated`))
   console.log(chalk.blue('Beginning uploading package to Azure Storage...'))
+  azureConfig = config
   return uploadFolderAsPackage(
       packageDirectory,
       outputDirectory,
-      config.storageContainerName,
-      config.storageAccountName,
-      config.storageAccountKey
+      azureConfig.storageContainerName,
+      azureConfig.storageAccountName,
+      azureConfig.storageAccountKey
     )
 })
   .then((uploadUri) => {
@@ -94,7 +96,11 @@ parseAzureStorageCredentials(azureConfigCommandLineArgs, azureConfigPath).then((
     console.log(chalk.green(`Finished uploading MSDeploy package to URI "${packageUri}"`))
     console.log(chalk.blue(`Updating paramaters file with package URI: '${armParametersFilePath}'`))
     return copyAndUpdateJson(armParametersFilePath, (templateParemeterJson) => {
-      templateParemeterJson.parameters.packageUri.value = packageUri
+      templateParemeterJson.parameters.packageUri.value = packageUri,
+      templateParemeterJson.parameters.azureAdTenant = azureConfig.azureAdTenant,
+      templateParemeterJson.parameters.azureAdClientId = azureConfig.azureAdClientId,
+      templateParemeterJson.parameters.azureAdAadInstance = azureConfig.azureAdAadInstance,
+      templateParemeterJson.parameters.azureAdPostLogoutRedirectUri = azureConfig.azureAdPostLogoutRedirectUri
     }, outputDirectory)
   })
   .then(() => {

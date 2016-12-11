@@ -1,0 +1,9 @@
+{
+    "storageAccountName": "",
+    "storageAccountKey": "",
+    "storageContainerName": "",
+    "azureAdTenant": "",
+    "azureAdClientId": "",
+    "azureAdAadInstance": "",
+    "azureAdPostLogoutRedirectUri": ""
+}
