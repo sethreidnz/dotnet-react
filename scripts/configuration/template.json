@@ -96,7 +96,7 @@
                         {
                             "name": "AzureAd:PostLogoutRedirectUri",
                             "value": "[parameters('azureAdPostLogoutRedirectUri')]"
-                        },
+                        }
                     ]
                 }
             },
