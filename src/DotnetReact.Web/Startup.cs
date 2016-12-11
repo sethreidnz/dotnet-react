@@ -37,17 +37,14 @@ namespace DotnetreactWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Options Objects see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
-            services.Configure<AzureAdOptions>(options => Configuration.GetSection("AzureAd").Bind(options));
-
-            // Add framework services.
-            services.AddMvc();
-
             if(getAzureAdOptions() != null)
             {
                 // Add Authentication services.
                 services.AddAuthentication(sharedOptions => sharedOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
             }
+
+            // Add framework services.
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
