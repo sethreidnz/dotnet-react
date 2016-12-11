@@ -4,6 +4,18 @@
   "parameters": {
     "packageUri": {
       "value": ""
+    },
+    "azureAdTenant": {
+      "value": ""
+    },
+    "azureAdClientId": {
+      "value": ""
+    },
+    "azureAdAadInstance": {
+      "value": ""
+    },
+    "azureAdPostLogoutRedirectUri": {
+      "value": ""
     }
   }
 }

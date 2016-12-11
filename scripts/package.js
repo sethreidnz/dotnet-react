@@ -97,10 +97,10 @@ parseAzureStorageCredentials(azureConfigCommandLineArgs, azureConfigPath).then((
     console.log(chalk.blue(`Updating paramaters file with package URI: '${armParametersFilePath}'`))
     return copyAndUpdateJson(armParametersFilePath, (templateParemeterJson) => {
       templateParemeterJson.parameters.packageUri.value = packageUri,
-      templateParemeterJson.parameters.azureAdTenant = azureConfig.azureAdTenant,
-      templateParemeterJson.parameters.azureAdClientId = azureConfig.azureAdClientId,
-      templateParemeterJson.parameters.azureAdAadInstance = azureConfig.azureAdAadInstance,
-      templateParemeterJson.parameters.azureAdPostLogoutRedirectUri = azureConfig.azureAdPostLogoutRedirectUri
+      templateParemeterJson.parameters.azureAdTenant.value = azureConfig.azureAdTenant,
+      templateParemeterJson.parameters.azureAdClientId.value = azureConfig.azureAdClientId,
+      templateParemeterJson.parameters.azureAdAadInstance.value = azureConfig.azureAdAadInstance,
+      templateParemeterJson.parameters.azureAdPostLogoutRedirectUri.value = azureConfig.azureAdPostLogoutRedirectUri
     }, outputDirectory)
   })
   .then(() => {
