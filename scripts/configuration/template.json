@@ -113,7 +113,8 @@
                         "AzureAd:Tenant": "[parameters('azureAdTenant')]",
                         "AzureAd:ClientId": "[parameters('azureAdClientId')]",
                         "AzureAd:AadInstance": "[parameters('azureAdAadInstance')]",
-                        "AzureAd:PostLogoutRedirectUri": "[parameters('azureAdPostLogoutRedirectUri')]"
+                        "AzureAd:PostLogoutRedirectUri": "[parameters('azureAdPostLogoutRedirectUri')]",
+                        "ASPNETCORE_ENVIRONMENT": "Production"
                     }
                 }
             ],
