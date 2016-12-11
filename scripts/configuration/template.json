@@ -78,7 +78,27 @@
                         "ipBasedSslState": 0
                     }
                 ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServiceName'))]"
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServiceName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureAd:Tenant",
+                            "value": "[parameters('azureAdTenant')]"
+                        },
+                        {
+                            "name": "AzureAd:ClientId",
+                            "value": "[parameters('azureAdClientId')]"
+                        },
+                        {
+                            "name": "AzureAd:AadInstance",
+                            "value": "[parameters('azureAdAadInstance')]"
+                        },
+                        {
+                            "name": "AzureAd:PostLogoutRedirectUri",
+                            "value": "[parameters('azureAdPostLogoutRedirectUri')]"
+                        },
+                    ]
+                }
             },
             "resources": [
                 {
