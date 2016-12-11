@@ -1,14 +1,20 @@
 const chalk = require('chalk')
 const path = require('path')
+const program = require('commander')
 
 // local dependendies
 const { cleanDirectories, ensureDirectories } = require('./lib/fileUtilities')
 
-const releaseDirectory = path.join(__dirname, '../release')
-const deployDirectory = path.join(__dirname, '../deploy')
+program
+  .option('-a, --publishDirectory <publishDirectory>', 'The directory where the web package is published to. Defaults to "./release"')
+  .option('-a, --deployDirectory <deployDirectory>', 'Defaults to "./deploy"')
+  .parse(process.argv)
 
-cleanDirectories([releaseDirectory, deployDirectory])
-.then(() => ensureDirectories([releaseDirectory, deployDirectory]))
+const publishDirectory = program.publishDirectory ? program.publishDirectory : path.join(__dirname, '../release')
+const deployDirectory = program.deployDirectory ? program.deployDirectory : path.join(__dirname, '../deploy')
+
+cleanDirectories([publishDirectory, deployDirectory])
+.then(() => ensureDirectories([publishDirectory, deployDirectory]))
 .then(() => {
   console.log(chalk.green('Finished cleaning.'))
 })

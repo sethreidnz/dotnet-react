@@ -4,9 +4,10 @@
   "description": "An example application for using ASPNET JavaScriptServices and Azure features",
   "main": "index.js",
   "scripts": {
-    "clean": "node ./scripts/clean",
+    "clean": "node ./scripts/clean --publishDirectory ./src/DotnetReact.Web/bin/Release/netcoreapp1.0/publish",
     "prebuild": "npm run clean",
-    "build": "dotnet publish src/DotnetReact.Web --configuration Release --output ./release",
+    "build": "dotnet publish src/DotnetReact.Web --configuration Release",
+    "prepackage": "npm run build",
     "package": "node ./scripts/package.js --packageDirectory ./src/DotnetReact.Web/bin/Release/netcoreapp1.0/publish --outputDirectory ./deploy",
     "package:localConfig": "npm run package -- --azureConfigFilePath ./scripts/configuration/storage.config.json",
     "deploy": "node ./scripts/deploy.js"
