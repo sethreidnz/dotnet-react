@@ -30,10 +30,8 @@ class AzureBlobStorageClient {
       self.azureBlobService.createBlockBlobFromLocalFile(containerName, blobName, filePath, options,
       (error, result, response) => {
         if (error) {
-          console.error(`${error} ${response}`)
           reject(error)
         } else if (!response.isSuccessful) {
-          console.error(`${error} ${response}`)
           reject(response)
         } else {
           const blobUri = `${self.azureBlobService.host.primaryHost}${containerName}/${blobName}`
